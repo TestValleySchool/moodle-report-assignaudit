@@ -14,19 +14,36 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Module version information for Audit Assignments 
+ * Output renderable (handler to set up data) for passing data to Mustache template 
  *
  * @package report_assignaudit
  * @author Test Valley School
  * @copyright 2017 Test Valley School {@link https://www.testvalley.hants.sch.uk/}
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
+namespace report_assignaudit\output;
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2017013006;			// YYYYMMDDXX where XX is an incrementing revision number for that day
-$plugin->requires  = 2016052300;			// required Moodle version string
-$plugin->component = 'report_assignaudit';		// Full name of the plugin
-$plugin->maturity  = MATURITY_BETA;			// 
-$plugin->release   = 'v1.0';				// friendly version number
-$plugin->cron      = 0;
+use plugin_renderer_base;
+
+/**
+ * Output renderable (handler to set up data) for passing data to Mustache template 
+ *
+ * @package report_assignaudit
+ * @author Test Valley School
+ * @copyright 2017 Test Valley School {@link https://www.testvalley.hants.sch.uk/}
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class renderer extends plugin_renderer_base {
+
+	/**
+	 * Render the index page using the mustache template
+	 * See @link{https://docs.moodle.org/dev/Output_API}
+	 */
+	public function render_index_page($page) {
+		$data = $page->export_for_template($this);
+		return parent::render_from_template('report_assignaudit/index_page', $data);
+	}
+};

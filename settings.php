@@ -14,19 +14,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Module version information for Audit Assignments 
+ * Settings and configuration for Audit Assignments 
  *
  * @package report_assignaudit
  * @author Test Valley School
  * @copyright 2017 Test Valley School {@link https://www.testvalley.hants.sch.uk/}
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
-defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2017013006;			// YYYYMMDDXX where XX is an incrementing revision number for that day
-$plugin->requires  = 2016052300;			// required Moodle version string
-$plugin->component = 'report_assignaudit';		// Full name of the plugin
-$plugin->maturity  = MATURITY_BETA;			// 
-$plugin->release   = 'v1.0';				// friendly version number
-$plugin->cron      = 0;
+ defined('MOODLE_INTERNAL') || die();
+
+ $ADMIN->add(
+ 	'reports',
+	new admin_externalpage(
+		'reportassignaudit',
+		get_string('pluginname', 'report_assignaudit'),
+		"{$CFG->wwwroot}/report/assignaudit/index.php",
+		'report/assignaudit:audit'
+	)
+);
+
+ $settings = null;
+ 
