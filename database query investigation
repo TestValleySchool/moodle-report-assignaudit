@@ -1,0 +1,44 @@
+SELECT
+	log.id, action, crud, component, courseid, eventname, userid, username, firstname, lastname, mdl_course.fullname, log.contextid, mdl_context.contextlevel
+
+FROM
+	mdl_logstore_standard_log AS log
+INNER JOIN
+	mdl_user ON log.userid = mdl_user.id
+INNER JOIN
+	mdl_course ON log.courseid = mdl_course.id
+INNER JOIN
+	mdl_context ON log.contextid = mdl_context.id
+WHERE
+	crud = 'c'
+	AND
+	eventname = '\\core\\event\\course_module_created'
+ORDER BY log.id DESC
+LIMIT 500;
+
+-----
+
+>>>
+vvv
+
+SELECT mdl_assign.id, course, name, FROM_UNIXTIME(duedate), FROM_UNIXTIME(allowsubmissionsfromdate), FROM_UNIXTIME(mdl_assign.timemodified), mdl_course.fullname FROM mdl_assign
+INNER JOIN mdl_course ON course = mdl_course.id;
+
+
+SELECT
+	log.id, action, crud, component, courseid, eventname, userid, username, firstname, lastname, mdl_course.fullname
+
+FROM
+	mdl_logstore_standard_log AS log
+INNER JOIN
+	mdl_user ON log.userid = mdl_user.id
+INNER JOIN
+	mdl_course ON log.courseid = mdl_course.id
+WHERE
+	crud = 'c'
+	AND
+--	eventname = '\\core\\event\\calendar_event_created'
+	eventname = '\\core\\event\\course_module_created'
+ORDER BY log.id DESC
+LIMIT 500
+
