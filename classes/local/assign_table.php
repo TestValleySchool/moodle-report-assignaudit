@@ -64,7 +64,6 @@ require_once(dirname(__FILE__) . '/../../../../lib/tablelib.php');
 	  * of data.
 	  */
 	 public function fill_with_data($data) {
-	 var_dump($data);
 		if (is_array($data) && count($data) > 0) {
 			foreach($data as $key => $item) {
 
@@ -78,16 +77,52 @@ require_once(dirname(__FILE__) . '/../../../../lib/tablelib.php');
 					$row[1] = \userdate($item->duedate, get_string('strftimedateshort', 'langconfig'));
 				}
 
-				if (property_exists($item, 'name') && property_exists($item, 'intro')) {
-					$row[2] = '<strong>' . \format_text($item->name) . '</strong><br/>' . \format_text($item->intro);
+				if (property_exists($item, 'name') && property_exists($item, 'intro') && property_exists($item, 'instance_id')) {
+
+					$row[2] = '<h5>';
+
+					$row[2] .= \html_writer::link(
+						new \moodle_url('/mod/assign/view.php', array(
+						'id' => $item->instance_id)
+						), \format_text($item->name)
+					);
+
+					$row[2] .= '</h5><p>';
+
+					$row[2] .= \format_text($item->intro);
+
+					$row[2] .= '</p>';
+
+					$row[2] .= '<p class="form-label form-shortname">';
+					$row[2] .= get_string('createdcolon', 'report_assignaudit');
+					$row[2] .= \userdate($item->added, get_string('strftimedatetime', 'langconfig'));
+					$row[2] .= '</p>';
+
+					$row[2] .= '<p class="form-label form-shortname">';
+					$row[2] .= get_string('updatedcolon', 'report_assignaudit');
+					$row[2] .= \userdate($item->timemodified, get_string('strftimedatetime', 'langconfig'));
+					$row[2] .= '</p>';
+
 				}
 
 				if (count($row) == 3) {
 					$this->add_data($row);
+				}
+				else {
+					throw new \coding_exception(get_string('missingassigndatarowentries', 'report_assignaudit'));
 				}
 
 			}
 		}
 	 }
 
+	/**
+	 * Important to override this, even thought it is not part of the public API.
+	 * We want a much nicer message than a massive "Nothing to display".
+	 */
+	public function print_nothing_to_display() {
+		echo '<div class="alert alert-info">';
+		echo get_string('noassignsfoundinrange', 'report_assignaudit');
+		echo '</div>';
+	}
  };

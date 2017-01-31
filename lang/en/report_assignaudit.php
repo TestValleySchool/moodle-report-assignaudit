@@ -30,7 +30,7 @@
  $string['assignaudit:audit'] = 'Audit Assignments';
  $string['report/assignaudit:audit'] = 'Audit the Creation of Assignments';
  $string['indexpagefriendlyintro'] = 'On this page, you are able to see the Assignments that have been set in courses that you oversee.';
- $string['createdbetween'] = 'Created Between';
+ $string['createdbetween'] = 'Created between';
  $string['showbutton'] = 'Show';
  $string['findassignments'] = 'Find Assignments:';
  $string['conjuctiveand'] = 'and';
@@ -43,3 +43,7 @@
  $string['incourses'] = 'in Courses:';
  $string['nocourses'] = 'There are no courses in which you are enrolled and have the appropriate permission.';
  $string['details'] = 'Details';
+ $string['missingassigndatarowentries'] = 'Cannot populate a row in the table with invalid input data. A stdClass() with the appropriate assign properties is required.';
+ $string['createdcolon'] = 'Created: ';
+ $string['noassignsfoundinrange'] = 'No assignments were found in this course during this time range.';
+ $string['updatedcolon'] = 'Updated: ';

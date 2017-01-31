@@ -57,13 +57,13 @@ $template_data = array();
 if ($data = $form->get_data()) {
 
 	$course_ids = \report_assignaudit\local\course_assign_data::form_data_to_course_id_list($data);
-	
+
 	if (count($course_ids) > 0) {
 		foreach($course_ids as $course_id) {
 			$course = get_course($course_id);
 
 			// get assigns from this course
-			$assigns = \report_assignaudit\local\course_assign_data::get_assigns_in_date_range($course_id, strtotime('2017-01-01'), strtotime('2017-02-16')); // TODO dates
+			$assigns = \report_assignaudit\local\course_assign_data::get_assigns_in_date_range($course_id, $data->datefrom, strtotime( date('Y-m-d', $data->dateto) . ' 23:59:00'));
 
 			$course->assigns = array_values($assigns);
 			/* we must array_values this to avoid the array keys being non-sequential. Moodle makes
@@ -80,6 +80,9 @@ if ($data = $form->get_data()) {
 			$table->fill_with_data($course->assigns);
 			$table->finish_output();
 			$course->assigns_table = ob_get_clean();
+
+			// get course link for display
+			$course->courselink = new \moodle_url('/course/view.php', array('id' => $course_id));
 
 			$template_data[] = $course;
 		}

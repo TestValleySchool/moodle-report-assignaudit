@@ -82,6 +82,14 @@ class course_assign_data {
 					$courseid = substr($key, $course_detail_index + strlen('course_'));
 					$courselist[] = $courseid;
 				}
+
+				// if the key is 'mappedcourses', we will use this autocomplete form to populate our course list
+				if ('mappedcourses' == $key && is_array($item) && count($item) > 0) {
+					foreach($item as $mapped_course) {
+						$courselist[] = $mapped_course;
+					}
+				}
+
 			}
 		}
 
@@ -99,11 +107,33 @@ class course_assign_data {
 		$output = array();
 
 		$records = $DB->get_records_sql(
-			'SELECT * FROM {assign} WHERE course = :course AND timemodified >= :startdate AND timemodified <= :enddate',
+			'SELECT
+				{course_modules}.id AS instance_id,
+				{assign}.id AS id,
+				{assign}.course AS course,
+				{assign}.name AS name,
+				intro,
+				introformat,
+				duedate,
+				allowsubmissionsfromdate,
+				timemodified,
+				added
+			FROM {assign} 
+			INNER JOIN {course_modules} ON {assign}.id = {course_modules}.instance
+			INNER JOIN {modules} ON {course_modules}.module = {modules}.id
+			WHERE {assign}.course = :course
+				AND timemodified >= :startdate
+				AND timemodified <= :enddate
+				AND {course_modules}.visible = :visible1
+				AND {modules}.visible = :visible2
+				AND {modules}.name = :modulename',
 			array(
 				'course'    => $course,
 				'startdate' => $startdate,
-				'enddate'   => $enddate
+				'enddate'   => $enddate,
+				'visible1'  => 1,
+				'visible2'  => 1,
+				'modulename'=> 'assign'
 			)
 		);
 

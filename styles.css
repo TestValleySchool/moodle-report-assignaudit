@@ -1,0 +1,17 @@
+body#page-admin-report-assignaudit-index table.flexible .c0,body#page-admin-report-assignaudit-index table.flexible .c1 {
+	max-width: 120px;
+	width: 120px;
+}
+
+body#page-admin-report-assignaudit-index #region-main {
+	width:100%;
+}
+
+body#page-admin-report-assignaudit-index .form-shortname {/* TODO this should not be specific -- find a general style from core? */
+	font-size: 11px;
+	color: rgba(63, 63, 63, 255);
+}
+
+body#page-admin-report-assignaudit-index h3.course-with-assigns {
+	border-bottom: 1px solid rgba(200,200,200,255);
+}
