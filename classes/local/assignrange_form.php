@@ -112,9 +112,17 @@ class assignrange_form extends moodleform {
 			$mform->addElement('html', get_string('nocourses', 'report_assignaudit'));
 		}*/
 
+		/* the autocomplete 'course' element takes an option for 'requiredcapabilities'. We can
+		simply pass in the audit capability and it will determine all possible valid courses that the user
+		can select. Beautiful! */
+
 		$autocomplete_options = array(
-			'multiple'         => true,
-			'includefrontpage' => false
+			'multiple'             => true,
+			'includefrontpage'     => false,
+			'requiredcapabilities' => array(
+					'report/assignaudit:audit'
+			),
+			'placeholder'          => get_string('coursestosearch', 'report_assignaudit') 
 		);
 
 		$mform->addElement('course', 'mappedcourses', get_string('courses'), $autocomplete_options);
