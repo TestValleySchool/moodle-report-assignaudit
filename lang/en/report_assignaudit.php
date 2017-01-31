@@ -40,3 +40,6 @@
  $string['coursemissingid'] = 'Cannot create an assignrange form when a passed course is missing the id property.';
  $string['coursemissingshortname'] = 'Cannot create an assignrange form when a passed course is missing the shortname property.';
  $string['coursemissingfullname'] = 'Cannot create an assignrange form when a passed course is missing the fullname property.';
+ $string['incourses'] = 'in Courses:';
+ $string['nocourses'] = 'There are no courses in which you are enrolled and have the appropriate permission.';
+ $string['details'] = 'Details';

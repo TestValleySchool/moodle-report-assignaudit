@@ -46,10 +46,17 @@ class index_page implements renderable, templatable {
 	protected $auditable_courses = array();
 
 	/**
+	 * An array of selected courses with their attached assigns in the ->assigns
+	 * property.
+	 */
+	protected $courses_with_assigns = array();
+
+	/**
 	 * The class constructor should receive any information that needs to be passed to the template at rendertime.
 	 */
-	public function __construct($auditable_courses) {
+	public function __construct($auditable_courses, $courses_with_assigns) {
 		$this->auditable_courses = $auditable_courses;
+		$this->courses_with_assigns = $courses_with_assigns;
 	}
 
 	/**
@@ -65,6 +72,8 @@ class index_page implements renderable, templatable {
 
 		$form = new \report_assignaudit\local\assignrange_form(null, $form_setup_data, 'post');
 		$data->assignrange_form = $form->render();
+
+		$data->courses_with_assigns = $this->courses_with_assigns;
 
 		return $data;
 	}

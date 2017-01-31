@@ -25,6 +25,7 @@
 require(dirname(__FILE__).'/../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once(dirname(__FILE__).'/classes/local/course_assign_data.php');
+require_once(dirname(__FILE__).'/classes/local/assign_table.php');
 
 admin_externalpage_setup('reportassignaudit', '', null, '', array());
 // admin_externalpage_setup does access validation checks for us
@@ -43,8 +44,50 @@ echo $output->heading($pagetitle);
 
 $auditable_courses = report_assignaudit\local\course_assign_data::get_auditable_courses($USER);
 
+
+
+$form_setup_data = new stdClass();
+$form_setup_data->courses = $auditable_courses;
+// if the form has been submitted, get the relevant data for displaying in the table
+$form = new \report_assignaudit\local\assignrange_form(null, $form_setup_data, 'post');
+
+// data we will pass to mustache template
+$template_data = array();
+
+if ($data = $form->get_data()) {
+
+	$course_ids = \report_assignaudit\local\course_assign_data::form_data_to_course_id_list($data);
+	
+	if (count($course_ids) > 0) {
+		foreach($course_ids as $course_id) {
+			$course = get_course($course_id);
+
+			// get assigns from this course
+			$assigns = \report_assignaudit\local\course_assign_data::get_assigns_in_date_range($course_id, strtotime('2017-01-01'), strtotime('2017-02-16')); // TODO dates
+
+			$course->assigns = array_values($assigns);
+			/* we must array_values this to avoid the array keys being non-sequential. Moodle makes
+			   the array key equal to the assign ID. Mustache does not accept non-sequentially indexed
+			   arrays
+			*/
+
+			// make a table from these assigns
+			$table = new \report_assignaudit\local\assign_table($USER->id . $course_id, '/report/assignaudit/index.php');
+
+			ob_get_clean();
+			ob_start();
+			$table->setup();
+			$table->fill_with_data($course->assigns);
+			$table->finish_output();
+			$course->assigns_table = ob_get_clean();
+
+			$template_data[] = $course;
+		}
+	}
+}
+
 // create renderable
-$renderable = new report_assignaudit\output\index_page($auditable_courses);
+$renderable = new report_assignaudit\output\index_page($auditable_courses, $template_data);
 
 echo $output->render($renderable);
 

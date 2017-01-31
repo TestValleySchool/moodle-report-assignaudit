@@ -85,23 +85,27 @@ class assignrange_form extends moodleform {
 			'stopyear'       => (int) date('Y'),
 		);
 
-		$date_selectors[] =& $mform->createElement('date_selector', 'datefrom', get_string('created_between'), $date_sel_options);
+		$mform->setExpanded('find_assignments');
+
+		$date_selectors[] =& $mform->createElement('date_selector', 'datefrom', get_string('createdbetween', 'report_assignaudit'), $date_sel_options);
 		$date_selectors[] =& $mform->createElement('date_selector', 'dateto', get_string('conjuctiveand', 'report_assignaudit'), $date_sel_options);
 
 		foreach($date_selectors as $element) {
 			$mform->addElement($element);
 		}
 
+		$mform->addElement('header', 'in_courses', get_string('incourses', 'report_assignaudit'));
+
 		if (count($this->course_list) > 0) {
 			foreach($this->course_list as $course) {
-				$mform->addElement('advcheckbox', 'course_' . $course->id, $course->shortname);
+				$mform->addElement('advcheckbox', 'course_' . $course->id, $course->shortname, '', array( 'group' => 1 ), array(0, 1) );
 			}
 		}
 		else {
-
+			$mform->addElement('html', get_string('nocourses', 'report_assignaudit'));
 		}
 
-		$this->add_checkbox_controller(1, get_string('allcourses', 'report_assignaudit'), array());
+		//$this->add_checkbox_controller(1, get_string('allcourses', 'report_assignaudit'), array());
 
 
 		$this->add_action_buttons(/* $cancel */ false, get_string('showbutton', 'report_assignaudit'));

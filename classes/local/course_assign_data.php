@@ -61,4 +61,56 @@ class course_assign_data {
 
 	}
 
+	/** 
+	 * Given the returned $data from a moodleform, determine which of the course checkboxes
+	 * were checked and return a list of those IDs.
+	 */
+	public static function form_data_to_course_id_list($formdata) {
+
+		$courselist = array();
+	
+		$formdata = (array)$formdata;
+		if (is_array($formdata) && count($formdata) > 0) {
+			foreach($formdata as $key => $item) {
+				if (!$item) {
+					// advcheckbox disabled, so skip
+					continue;
+				}
+
+				$course_detail_index = strpos($key, 'course_');
+				if ($course_detail_index !== null && $course_detail_index !== false && $course_detail_index !== -1) {
+					$courseid = substr($key, $course_detail_index + strlen('course_'));
+					$courselist[] = $courseid;
+				}
+			}
+		}
+
+
+		return $courselist;
+
+	}
+
+	/** 
+	 * Get all the assigns that are in the specified course and were created between the startdate
+	 * and enddate specified.
+	 */
+	public static function get_assigns_in_date_range($course, $startdate, $enddate) {
+		global $DB;
+		$output = array();
+
+		$records = $DB->get_records_sql(
+			'SELECT * FROM {assign} WHERE course = :course AND timemodified >= :startdate AND timemodified <= :enddate',
+			array(
+				'course'    => $course,
+				'startdate' => $startdate,
+				'enddate'   => $enddate
+			)
+		);
+
+		if (count($records) > 0) {
+			$output = $records;
+		}
+
+		return $output;
+	}
 };
