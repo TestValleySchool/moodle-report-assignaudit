@@ -14,7 +14,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Settings and configuration for Audit Assignments 
+ * Settings and configuration for Audit Assignments. Responsible for loading the page
+ * into the menu under 'Site configuration'
  *
  * @package report_assignaudit
  * @author Test Valley School
@@ -23,6 +24,8 @@
  */
 
  defined('MOODLE_INTERNAL') || die();
+
+// this will load it into 'Site Administration'. Functions in lib.php load it into category/course contexts
 
 $ADMIN->add(
  	'reports',
@@ -33,16 +36,6 @@ $ADMIN->add(
 		'report/assignaudit:audit'
 	)
 );
-
-/*($PAGE->settingsnav->add(
- 	'reports',
-	new admin_externalpage(
-		'reportassignaudit',
-		get_string('pluginname', 'report_assignaudit'),
-		"{$CFG->wwwroot}/report/assignaudit/index.php",
-		'report/assignaudit:audit'
-	)
-);*/
 
  $settings = null;
  

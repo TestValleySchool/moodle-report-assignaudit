@@ -14,7 +14,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Public API for Audit Assignments 
+ * Public API for Audit Assignments. Responsible for loading the report link into the
+ * menus for the course and category contexts.
  *
  * @package report_assignaudit
  * @author Test Valley School
