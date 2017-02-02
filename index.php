@@ -53,6 +53,9 @@ $output = $PAGE->get_renderer('report_assignaudit');
 echo $output->header();
 echo $output->heading($pagetitle);
 
+// log this page access
+\report_assignaudit\event\report_viewed::create()->trigger();
+
 $auditable_courses = report_assignaudit\local\course_assign_data::get_auditable_courses($USER);
 
 $form_setup_data = new stdClass();
@@ -77,8 +80,9 @@ $form = new \report_assignaudit\local\assignrange_form(null, $form_setup_data, '
 
 // data we will pass to mustache template
 $template_data = array();
+$data = $form->get_data();
 
-if ($data = $form->get_data() || count($course_ids) > 0) {
+if ($data || count($course_ids) > 0) {
 
 	$course_ids = array_merge($course_ids, \report_assignaudit\local\course_assign_data::form_data_to_course_id_list($data));
 
@@ -89,6 +93,10 @@ if ($data = $form->get_data() || count($course_ids) > 0) {
 			if (!has_capability('report/assignaudit:audit', \context_course::instance($course_id))) {
 				$course->courselink = new \moodle_url('/course/view.php', array('id' => $course_id));
 				$course->error = get_string('nopermissionincourse', 'report_assignaudit');
+				
+				// trigger event that we have audited this course
+				\report_assignaudit\event\course_audited::create_from_course($course, false)->trigger();
+
 				$template_data[] = $course;
 				continue;
 			}
@@ -115,6 +123,9 @@ if ($data = $form->get_data() || count($course_ids) > 0) {
 			// get course link for display
 			$course->courselink = new \moodle_url('/course/view.php', array('id' => $course_id));
 
+			// trigger event that we have audited this course
+			\report_assignaudit\event\course_audited::create_from_course($course)->trigger();
+
 			$template_data[] = $course;
 		}
 	}
@@ -122,6 +133,8 @@ if ($data = $form->get_data() || count($course_ids) > 0) {
 
 // create renderable
 $renderable = new report_assignaudit\output\index_page($auditable_courses, $template_data);
+
+
 
 echo $output->render($renderable);
 

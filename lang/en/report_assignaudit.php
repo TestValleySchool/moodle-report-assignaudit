@@ -49,3 +49,7 @@
  $string['updatedcolon'] = 'Updated: ';
  $string['coursestosearch'] = 'Courses';
  $string['functionrequiresarray'] = 'This function must be called with an array as the first argument.';
+ $string['eventauditpageviewed'] = 'Audit Assignments report page viewed';
+ $string['eventauditpagevieweddescription'] = 'The user with ID \'%d\' viewed the main Audit Assignments report page.';
+ $string['eventcourseaudited'] = 'Assignments audited for a course';
+ $string['eventcourseauditeddescription'] = 'The user with ID \'%d\' audited the Assignments in the course with id \'%d\' (\'%s\'). Access granted: %s';
