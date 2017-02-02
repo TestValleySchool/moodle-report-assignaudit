@@ -143,4 +143,28 @@ class course_assign_data {
 
 		return $output;
 	}
+
+	/**
+	 * Determine whether or not the current user has the appropriate capability in all
+	 * of the courses with the passed ids.
+	 * @param array ids A list of course IDs
+	 * @return bool
+	 */
+	public static function user_has_capability_in_course_ids($ids) {	
+		if (!is_array($ids)) {
+			throw new \coding_exception(\get_string('functionrequiresarray', 'report_assignaudit'));
+		}
+		if (count($ids) <= 0) {
+			return true;
+		}
+
+		foreach($ids as $id) {
+			if (!has_capability('report/assignaudit:audit', \context_course::instance($id))) {
+				return false;
+			}
+		}
+
+		return true;
+
+	}
 };

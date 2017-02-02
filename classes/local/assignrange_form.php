@@ -125,7 +125,11 @@ class assignrange_form extends moodleform {
 			'placeholder'          => get_string('coursestosearch', 'report_assignaudit') 
 		);
 
-		$mform->addElement('course', 'mappedcourses', get_string('courses'), $autocomplete_options);
+		$mapped_courses = $mform->addElement('course', 'mappedcourses', get_string('courses'), $autocomplete_options);
+
+		if (isset($this->_customdata->selected_courses)) {
+			$mapped_courses->setValue($this->_customdata->selected_courses);
+		}
 
 		$this->add_action_buttons(/* $cancel */ false, get_string('showbutton', 'report_assignaudit'));
 

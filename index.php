@@ -27,13 +27,24 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once(dirname(__FILE__).'/classes/local/course_assign_data.php');
 require_once(dirname(__FILE__).'/classes/local/assign_table.php');
 
-admin_externalpage_setup('reportassignaudit', '', null, '', array());
-// admin_externalpage_setup does access validation checks for us
-
 $title = get_string('pluginname', 'report_assignaudit');
 $pagetitle = $title;
 $url = new \moodle_url('/report/assignaudit/index.php');
 $PAGE->set_url($url);
+
+
+// get any passed course ids and do permissions checks
+$course_ids = optional_param_array('courses', array(), PARAM_INT);
+
+if (count($course_ids) > 0) {
+	$PAGE->set_context(context_course::instance($course_ids[0]));
+	require_login($course_ids[0], false);
+}
+else {
+	$PAGE->set_context(context_system::instance());
+	require_login(null, false, null);
+}
+
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
 
@@ -44,10 +55,23 @@ echo $output->heading($pagetitle);
 
 $auditable_courses = report_assignaudit\local\course_assign_data::get_auditable_courses($USER);
 
-
-
 $form_setup_data = new stdClass();
 $form_setup_data->courses = $auditable_courses;
+
+// load any prepared courses
+if (count($course_ids) > 0) {
+	$valid = true;
+	foreach($course_ids as $c) {
+		if (!is_numeric($c)) {
+			$valid = false;
+			break;
+		}
+	}
+	if ($valid && \report_assignaudit\local\course_assign_data::user_has_capability_in_course_ids($course_ids)) {
+		$form_setup_data->selected_courses = $course_ids;
+	}
+}
+
 // if the form has been submitted, get the relevant data for displaying in the table
 $form = new \report_assignaudit\local\assignrange_form(null, $form_setup_data, 'post');
 
@@ -61,6 +85,13 @@ if ($data = $form->get_data()) {
 	if (count($course_ids) > 0) {
 		foreach($course_ids as $course_id) {
 			$course = get_course($course_id);
+
+			if (!has_capability('report/assignaudit:audit', \context_course::instance($course_id))) {
+				$course->courselink = new \moodle_url('/course/view.php', array('id' => $course_id));
+				$course->error = get_string('nopermissionincourse', 'report_assignaudit');
+				$template_data[] = $course;
+				continue;
+			}
 
 			// get assigns from this course
 			$assigns = \report_assignaudit\local\course_assign_data::get_assigns_in_date_range($course_id, $data->datefrom, strtotime( date('Y-m-d', $data->dateto) . ' 23:59:00'));

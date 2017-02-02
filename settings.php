@@ -24,7 +24,7 @@
 
  defined('MOODLE_INTERNAL') || die();
 
- $ADMIN->add(
+$ADMIN->add(
  	'reports',
 	new admin_externalpage(
 		'reportassignaudit',
@@ -33,6 +33,16 @@
 		'report/assignaudit:audit'
 	)
 );
+
+/*($PAGE->settingsnav->add(
+ 	'reports',
+	new admin_externalpage(
+		'reportassignaudit',
+		get_string('pluginname', 'report_assignaudit'),
+		"{$CFG->wwwroot}/report/assignaudit/index.php",
+		'report/assignaudit:audit'
+	)
+);*/
 
  $settings = null;
  
