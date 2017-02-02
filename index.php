@@ -78,9 +78,9 @@ $form = new \report_assignaudit\local\assignrange_form(null, $form_setup_data, '
 // data we will pass to mustache template
 $template_data = array();
 
-if ($data = $form->get_data()) {
+if ($data = $form->get_data() || count($course_ids) > 0) {
 
-	$course_ids = \report_assignaudit\local\course_assign_data::form_data_to_course_id_list($data);
+	$course_ids = array_merge($course_ids, \report_assignaudit\local\course_assign_data::form_data_to_course_id_list($data));
 
 	if (count($course_ids) > 0) {
 		foreach($course_ids as $course_id) {

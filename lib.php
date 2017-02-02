@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 function report_assignaudit_extend_navigation_course($navigation, $course, $context) {
 	if (has_capability('report/assignaudit:audit', $context)) {
-		$url = new \moodle_url('/report/assignaudit/index.php', array('id' => $course->id));
+		$url = new \moodle_url('/report/assignaudit/index.php', array('courses[]' => $course->id));
 		$name = get_string('pluginname', 'report_assignaudit');
 		$navigation->add($name, $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
 	}

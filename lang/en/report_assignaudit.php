@@ -47,4 +47,5 @@
  $string['createdcolon'] = 'Created: ';
  $string['noassignsfoundinrange'] = 'No assignments were found in this course during this time range.';
  $string['updatedcolon'] = 'Updated: ';
- $string['coursestosearch'] = 'Courses in which to find assignments';
+ $string['coursestosearch'] = 'Courses';
+ $string['functionrequiresarray'] = 'This function must be called with an array as the first argument.';
