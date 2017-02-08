@@ -24,7 +24,6 @@ Site administrators will by default be able to audit assignment creation in all 
 
 ## TODO
 
- * Events for logging the usage of this feature
  * Icons in table?
 
 ## License

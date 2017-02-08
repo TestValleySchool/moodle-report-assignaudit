@@ -38,26 +38,22 @@ class course_assign_data {
 	 * Return an array of stdClass objects describing the courses which the specified
 	 * user has permission to audit.
 	 */
-	public static function get_auditable_courses($user) {
+	public static function get_auditable_courses($options = array('limit' => 0, 'idonly' => 1)) {
 
 		global $DB;
 
-		$courses = enrol_get_users_courses($user->id, true);
-
-		$auditable_courses = array();
-
-		if (is_array($courses) && count($courses) > 0) {
-			foreach($courses as $course) {
-				// get context id for this course
-				$context = \context_course::instance($course->id);
-
-				if (has_capability('report/assignaudit:audit', $context)) {
-					$auditable_courses[] = $course;
-				}
-			}
+		if (!is_array($options)) {
+			throw new \coding_exception('$options must be an array');
 		}
 
-		return $auditable_courses;		
+		require_once(dirname(__FILE__) . '/../../../../lib/coursecatlib.php');
+
+
+		$requiredcapabilities = array(
+			'report/assignaudit:audit'
+		);
+
+		return \coursecat::search_courses(array('search' => ''), $options, $requiredcapabilities);
 
 	}
 
@@ -87,6 +83,16 @@ class course_assign_data {
 				if ('mappedcourses' == $key && is_array($item) && count($item) > 0) {
 					foreach($item as $mapped_course) {
 						$courselist[] = $mapped_course;
+					}
+				}
+
+				// if 'auditallcourses' is ticked, then we will grab all our courses with permission and add those to the list
+				if ('auditallcourses' == $key && $item == '1') {
+					$auditable_courses = course_assign_data::get_auditable_courses();
+					if (is_array($auditable_courses) && count($auditable_courses) > 0) {
+						foreach($auditable_courses as $c) {
+							$courselist[] = $c;
+						}
 					}
 				}
 

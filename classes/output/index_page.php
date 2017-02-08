@@ -41,11 +41,6 @@ use stdClass;
 class index_page implements renderable, templatable {
 
 	/**
-	 * An array of objects detailing the courses this user can audit.
-	 */
-	protected $auditable_courses = array();
-
-	/**
 	 * An array of selected courses with their attached assigns in the ->assigns
 	 * property.
 	 */
@@ -54,8 +49,7 @@ class index_page implements renderable, templatable {
 	/**
 	 * The class constructor should receive any information that needs to be passed to the template at rendertime.
 	 */
-	public function __construct($auditable_courses, $courses_with_assigns) {
-		$this->auditable_courses = $auditable_courses;
+	public function __construct($courses_with_assigns) {
 		$this->courses_with_assigns = $courses_with_assigns;
 	}
 
@@ -68,7 +62,6 @@ class index_page implements renderable, templatable {
 		require_once( dirname(__FILE__) . ' /../local/assignrange_form.php');
 
 		$form_setup_data = new stdClass();
-		$form_setup_data->courses = $this->auditable_courses;
 
 		$form = new \report_assignaudit\local\assignrange_form(null, $form_setup_data, 'post');
 		$data->assignrange_form = $form->render();

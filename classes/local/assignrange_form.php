@@ -55,27 +55,6 @@ class assignrange_form extends moodleform {
 		global $CFG;
 		
 		// validate course list
-		if (!is_array($this->_customdata->courses)) {
-			throw new \coding_exception(get_string('nocoursesinlist', 'report_assignaudit'));
-		}
-
-		foreach($this->_customdata->courses as $course) {
-			if (!($course instanceof \stdClass)) {
-				throw new \coding_exception(get_string('coursesinlistmustbestdclass', 'report_assignaudit'), $course);
-			}
-			if (!property_exists($course, 'id')) {
-				throw new \coding_exception(get_string('coursemissingid', 'report_assignaudit'), $course);
-			}
-			if (!property_exists($course, 'shortname')) {
-				throw new \coding_exception(get_string('coursemissingshortname', 'report_assignaudit'), $course);
-			}
-			if (!property_exists($course, 'fullname')) {
-				throw new \coding_exception(get_string('coursemissingfullname', 'report_assignaudit'), $course);
-			}
-		}
-
-		$this->course_list = $this->_customdata->courses;
-
 		$mform = $this->_form;
 
 		$mform->addElement('header', 'find_assignments', get_string('findassignments', 'report_assignaudit'));
@@ -99,19 +78,6 @@ class assignrange_form extends moodleform {
 
 		$mform->addElement('header', 'in_courses', get_string('incourses', 'report_assignaudit'));
 
-		/*
-
-		fallback
-		if (count($this->course_list) > 0) {
-			foreach($this->course_list as $course) {
-				$mform->addElement('advcheckbox', 'course_' . $course->id, $course->shortname, '', array( 'group' => 1 ), array(0, 1) );
-			}
-			$this->add_checkbox_controller(1, get_string('allcourses', 'report_assignaudit'));
-		}
-		else {
-			$mform->addElement('html', get_string('nocourses', 'report_assignaudit'));
-		}*/
-
 		/* the autocomplete 'course' element takes an option for 'requiredcapabilities'. We can
 		simply pass in the audit capability and it will determine all possible valid courses that the user
 		can select. Beautiful! */
@@ -126,6 +92,8 @@ class assignrange_form extends moodleform {
 		);
 
 		$mapped_courses = $mform->addElement('course', 'mappedcourses', get_string('courses'), $autocomplete_options);
+
+		$mform->addElement('checkbox', 'auditallcourses', get_string('auditallcoursesorellipsis', 'report_assignaudit'), get_string('auditallcourses', 'report_assignaudit'));
 
 		if (isset($this->_customdata->selected_courses)) {
 			$mapped_courses->setValue($this->_customdata->selected_courses);

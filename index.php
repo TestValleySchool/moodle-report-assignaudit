@@ -56,10 +56,7 @@ echo $output->heading($pagetitle);
 // log this page access
 \report_assignaudit\event\report_viewed::create()->trigger();
 
-$auditable_courses = report_assignaudit\local\course_assign_data::get_auditable_courses($USER);
-
 $form_setup_data = new stdClass();
-$form_setup_data->courses = $auditable_courses;
 
 // load any prepared courses
 if (count($course_ids) > 0) {
@@ -132,8 +129,7 @@ if ($data || count($course_ids) > 0) {
 }
 
 // create renderable
-$renderable = new report_assignaudit\output\index_page($auditable_courses, $template_data);
-
+$renderable = new report_assignaudit\output\index_page($template_data);
 
 
 echo $output->render($renderable);
