@@ -76,6 +76,8 @@ class assignrange_form extends moodleform {
 		$mform->setDefault('datefrom', strtotime('now - 2 weeks'));
 		$mform->setDefault('dateto', strtotime('tomorrow'));
 
+		$mform->addElement('checkbox', 'includehidden', get_string('hiddenassignments', 'report_assignaudit'), get_string('includehidden', 'report_assignaudit'));
+
 		$mform->addElement('header', 'in_courses', get_string('incourses', 'report_assignaudit'));
 
 		/* the autocomplete 'course' element takes an option for 'requiredcapabilities'. We can
@@ -94,6 +96,7 @@ class assignrange_form extends moodleform {
 		$mapped_courses = $mform->addElement('course', 'mappedcourses', get_string('courses'), $autocomplete_options);
 
 		$mform->addElement('checkbox', 'auditallcourses', get_string('auditallcoursesorellipsis', 'report_assignaudit'), get_string('auditallcourses', 'report_assignaudit'));
+
 
 		if (isset($this->_customdata->selected_courses)) {
 			$mapped_courses->setValue($this->_customdata->selected_courses);

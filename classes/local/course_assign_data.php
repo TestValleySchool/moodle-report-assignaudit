@@ -108,40 +108,70 @@ class course_assign_data {
 	 * Get all the assigns that are in the specified course and were created between the startdate
 	 * and enddate specified.
 	 */
-	public static function get_assigns_in_date_range($course, $startdate, $enddate) {
+	public static function get_assigns_in_date_range($course, $startdate, $enddate, $visible_only = true) {
 		global $DB;
 		$output = array();
 
-		$records = $DB->get_records_sql(
-			'SELECT
-				{course_modules}.id AS instance_id,
-				{assign}.id AS id,
-				{assign}.course AS course,
-				{assign}.name AS name,
-				intro,
-				introformat,
-				duedate,
-				allowsubmissionsfromdate,
-				timemodified,
-				added
-			FROM {assign} 
-			INNER JOIN {course_modules} ON {assign}.id = {course_modules}.instance
-			INNER JOIN {modules} ON {course_modules}.module = {modules}.id
-			WHERE {assign}.course = :course
-				AND timemodified >= :startdate
-				AND timemodified <= :enddate
-				AND {course_modules}.visible = :visible1
-				AND {modules}.visible = :visible2
-				AND {modules}.name = :modulename',
-			array(
-				'course'    => $course,
-				'startdate' => $startdate,
-				'enddate'   => $enddate,
-				'visible1'  => 1,
-				'visible2'  => 1,
-				'modulename'=> 'assign'
-			)
-		);
+		if ($visible_only) {
+			$records = $DB->get_records_sql(
+				'SELECT
+					{course_modules}.id AS instance_id,
+					{assign}.id AS id,
+					{assign}.course AS course,
+					{assign}.name AS name,
+					intro,
+					introformat,
+					duedate,
+					allowsubmissionsfromdate,
+					timemodified,
+					added
+				FROM {assign} 
+				INNER JOIN {course_modules} ON {assign}.id = {course_modules}.instance
+				INNER JOIN {modules} ON {course_modules}.module = {modules}.id
+				WHERE {assign}.course = :course
+					AND timemodified >= :startdate
+					AND timemodified <= :enddate
+					AND {course_modules}.visible = :visible1
+					AND {modules}.visible = :visible2
+					AND {modules}.name = :modulename',
+				array(
+					'course'    => $course,
+					'startdate' => $startdate,
+					'enddate'   => $enddate,
+					'visible1'  => 1,
+					'visible2'  => 1,
+					'modulename'=> 'assign'
+				)
+			);
+		}
+		else {
+			$records = $DB->get_records_sql(
+				'SELECT
+					{course_modules}.id AS instance_id,
+					{assign}.id AS id,
+					{assign}.course AS course,
+					{assign}.name AS name,
+					intro,
+					introformat,
+					duedate,
+					allowsubmissionsfromdate,
+					timemodified,
+					added
+				FROM {assign} 
+				INNER JOIN {course_modules} ON {assign}.id = {course_modules}.instance
+				INNER JOIN {modules} ON {course_modules}.module = {modules}.id
+				WHERE {assign}.course = :course
+					AND timemodified >= :startdate
+					AND timemodified <= :enddate
+					AND {modules}.name = :modulename',
+				array(
+					'course'    => $course,
+					'startdate' => $startdate,
+					'enddate'   => $enddate,
+					'modulename'=> 'assign'
+				)
+			);
+		}
 
 		if (count($records) > 0) {
 			$output = $records;

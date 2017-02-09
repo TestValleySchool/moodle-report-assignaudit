@@ -55,3 +55,5 @@
  $string['eventcourseauditeddescription'] = 'The user with ID \'%d\' audited the Assignments in the course with id \'%d\' (\'%s\'). Access granted: %s';
  $string['auditallcoursesorellipsis'] = 'or&hellip;';
  $string['auditallcourses'] = 'Show results from all courses where I have permission.';
+ $string['includehidden'] = 'Include results that have been hidden from the course view.';
+ $string['hiddenassignments'] = 'Hidden Assignments';

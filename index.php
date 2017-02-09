@@ -98,8 +98,10 @@ if ($data || count($course_ids) > 0) {
 				continue;
 			}
 
+			$visible_only = (property_exists($data, 'includehidden') && $data->includehidden == '1') ? false : true;
+
 			// get assigns from this course
-			$assigns = \report_assignaudit\local\course_assign_data::get_assigns_in_date_range($course_id, $data->datefrom, strtotime( date('Y-m-d', $data->dateto) . ' 23:59:00'));
+			$assigns = \report_assignaudit\local\course_assign_data::get_assigns_in_date_range($course_id, $data->datefrom, strtotime( date('Y-m-d', $data->dateto) . ' 23:59:00'), $visible_only);
 
 			$course->assigns = array_values($assigns);
 			/* we must array_values this to avoid the array keys being non-sequential. Moodle makes
